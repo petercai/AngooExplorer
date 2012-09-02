@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>eXtplorer</title>
+<script type="text/javascript" src="scripts/editarea/edit_area_full_with_plugins.js"></script>
+<script type="text/javascript" src="scripts/extjs34/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="scripts/extjs34/ext-all.js"></script>
+<script type="text/javascript" src="scripts/extjs3-ext/ux.ondemandload/scriptloader.js"></script>
+<script type="text/javascript" src="scripts/extjs3-ext/ux.editareaadapater/ext-editarea-adapter.js"></script>
+<script type="text/javascript" src="scripts/extjs3-ext/ux.statusbar/ext-statusbar.js"></script>
+<script type="text/javascript" src="scripts/extjs3-ext/ux.fileuploadfield/ext-fileUploadField.js"></script>
+<script type="text/javascript" src="scripts/extjs3-ext/ux.locationbar/Ext.ux.LocationBar.js"></script>
+
+<!-- CSS -->
+<link type="text/css" href="scripts/extjs34/resources/css/ext-all.css" rel="stylesheet" />
+<link type="text/css" href="scripts/extjs3-ext/ux.locationbar/LocationBar.css" rel="stylesheet" />
+<link type="text/css" href="scripts/extjs3-ext/ux.fileuploadfield/fileuploadfield.css" rel="stylesheet" />
+
+<script type="text/javascript" src="scripts/js/functions.js"></script>
+<script type="text/javascript" src="scripts/js/extplorer.js"></script>
+		<link rel="shortcut icon" href="eXtplorer.ico" />
+ 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="robots" content="noindex, nofollow" />
+	</head>
+	<body>
+		﻿<link rel="stylesheet" href="style/style.css" type="text/css" />
+<div id="ext_header">
+<table border="0" width="100%" cellspacing="0" cellpadding="5">
+<tr>
+	<td width="20%">
+	
+
+</td>
+<td style="color:black;" width="10%">
+	<a href="http://extplorer.net" target="_blank" title="eXtplorer Project">
+		<img src="images/eXtplorer_logo.png" alt="eXtplorer Logo" border="0" />
+	</a>
+</td>
+
+<td style="padding-left: 15px; color:black;" id="bookmark_container" width="35%"></td>
+<td width="25%" style="padding-left: 15px; color:black;">Current mode: 
+	<strong>extplorer 
+		<a href="http://localhost/extplorer/index.php?option=com_extplorer&amp;action=logout" title="Logout">[Logout]</a>
+	</strong>. You could switch to 
+	<a onclick="openActionDialog('switch_file_mode', 'ftp_authentication');return false;" href="/extplorer/index.php?option=com_extplorer&nofetchscript=1&amp;file_mode=ftp">ftp</a> 
+	mode.
+	</td>
+</tr></table></div>		
+	<div id="dirtree-panel"></div>
+	<div id="locationbar-panel"></div>
+	<div id="item-grid"></div>
+	<div id="ext_statusbar" class="ext_statusbar"></div>
+	</body>
+</html>
