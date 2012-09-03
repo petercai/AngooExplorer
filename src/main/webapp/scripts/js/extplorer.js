@@ -1,10 +1,14 @@
+Ext.ns('ag.exp','ag.exp.App');
 
-function ext_init(){
-	Ext.BLANK_IMAGE_URL = "http://localhost/extplorer/scripts/extjs34/resources/images/default/s.gif";
+ag.exp.App = function(){
+    return {
+        ext_init: function()
+/*function ext_init()*/{
+	Ext.BLANK_IMAGE_URL = "scripts/extjs34/resources/images/default/s.gif";
     // create the Data Store
     datastore = new Ext.data.Store({
         proxy: new Ext.data.HttpProxy({
-            url: "http://localhost/extplorer/index.php",
+            url: "index.php",
             directory: "/",
             params:{start:0, limit:150, dir: this.directory, option:"com_extplorer", action:"getdircontents" }
         }),
@@ -59,7 +63,7 @@ function ext_init(){
                          	{
                              	xtype: "tbbutton",
                          		id: 'tb_home',
-                         		icon: 'http://localhost/extplorer/images/_home.png',
+                         		icon: 'images/_home.png',
                          		text: 'Home',
                          		tooltip: 'Home',
                          		cls:'x-btn-text-icon',
@@ -68,7 +72,7 @@ function ext_init(){
                             {
                          		xtype: "tbbutton",
                          		id: 'tb_reload',
-                              	icon: 'http://localhost/extplorer/images/_reload.png',
+                              	icon: 'images/_reload.png',
                               	text: 'Reload',
                             	tooltip: 'Reload',
                               	cls:'x-btn-text-icon',
@@ -77,7 +81,7 @@ function ext_init(){
                                                           	{
                               		xtype: "tbbutton",
                              		id: 'tb_search',
-                              		icon: 'http://localhost/extplorer/images/_filefind.png',
+                              		icon: 'images/_filefind.png',
                               		text: 'Search',
                               		tooltip: 'Search',
                               		cls:'x-btn-text-icon',
@@ -87,7 +91,7 @@ function ext_init(){
                             {
                             	xtype: "tbbutton",
                          		id: 'tb_new',
-                              		icon: 'http://localhost/extplorer/images/_filenew.png',
+                              		icon: 'images/_filenew.png',
                               		tooltip: 'New File/Directory',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -96,7 +100,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_edit',
-                              		icon: 'http://localhost/extplorer/images/_edit.png',
+                              		icon: 'images/_edit.png',
                               		tooltip: 'Edit',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -105,7 +109,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_copy',
-                              		icon: 'http://localhost/extplorer/images/_editcopy.png',
+                              		icon: 'images/_editcopy.png',
                               		tooltip: 'Copy',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -114,7 +118,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_move',
-                              		icon: 'http://localhost/extplorer/images/_move.png',
+                              		icon: 'images/_move.png',
                               		tooltip: 'Move',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -123,7 +127,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_delete',
-                              		icon: 'http://localhost/extplorer/images/_editdelete.png',
+                              		icon: 'images/_editdelete.png',
                               		tooltip: 'Delete',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -132,7 +136,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_rename',
-                              		icon: 'http://localhost/extplorer/images/_fonts.png',
+                              		icon: 'images/_fonts.png',
                               		tooltip: 'Rename',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -141,7 +145,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_chmod',
-                              		icon: 'http://localhost/extplorer/images/_chmod.png',
+                              		icon: 'images/_chmod.png',
                               		tooltip: 'Change (chmod) Rights (Folder/File(s))',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -151,7 +155,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_view',
-                              		icon: 'http://localhost/extplorer/images/_view.png',
+                              		icon: 'images/_view.png',
                               		tooltip: 'View',
                               		cls:'x-btn-icon',
                               		handler: function() { openActionDialog(this, 'view'); }
@@ -159,7 +163,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_diff',
-                              		icon: 'http://localhost/extplorer/images/extension/document.png',
+                              		icon: 'images/extension/document.png',
                               		tooltip: 'Diff',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -168,7 +172,7 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_download',
-                              		icon: 'http://localhost/extplorer/images/_down.png',
+                              		icon: 'images/_down.png',
                               		tooltip: 'Download',
                               		cls:'x-btn-icon',
                               		disabled: false,
@@ -178,28 +182,28 @@ function ext_init(){
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_upload',
-                              		icon: 'http://localhost/extplorer/images/_up.png',
+                              		icon: 'images/_up.png',
                               		tooltip: 'Upload',
                               		cls:'x-btn-icon',
                               		disabled: false,
                               		handler: function() { 
-                                  		Ext.ux.OnDemandLoad.load("http://localhost/extplorer/scripts/extjs3-ext/ux.swfupload/SwfUploadPanel.css");
-                              			Ext.ux.OnDemandLoad.load("http://localhost/extplorer/scripts/extjs3-ext/ux.swfupload/SwfUpload.js" );
-                              			Ext.ux.OnDemandLoad.load("http://localhost/extplorer/scripts/extjs3-ext/ux.swfupload/SwfUploadPanel.js",
+                                  		Ext.ux.OnDemandLoad.load("scripts/extjs3-ext/ux.swfupload/SwfUploadPanel.css");
+                              			Ext.ux.OnDemandLoad.load("scripts/extjs3-ext/ux.swfupload/SwfUpload.js" );
+                              			Ext.ux.OnDemandLoad.load("scripts/extjs3-ext/ux.swfupload/SwfUploadPanel.js",
                               		    	function(options) { openActionDialog(this, 'upload'); }); 
                           		    }
                               	},
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_archive',
-                              		icon: 'http://localhost/extplorer/images/_archive.png',
+                              		icon: 'images/_archive.png',
                               		tooltip: 'Archive',
                           			cls:'x-btn-icon',
                           			                              		handler: function() { openActionDialog(this, 'archive'); }
                           			                              	},{
                               		xtype: "tbbutton",
                              		id: 'tb_extract',
-                              		icon: 'http://localhost/extplorer/images/_extract.gif',
+                              		icon: 'images/_extract.gif',
                               		tooltip: 'Extract Archive',
                               		cls:'x-btn-icon',
                           			                              		handler: function() { openActionDialog(this, 'extract'); }
@@ -208,7 +212,7 @@ function ext_init(){
                               	{
                           			xtype: "tbbutton",
                              		id: 'tb_info',
-                              		icon: 'http://localhost/extplorer/images/_help.png',
+                              		icon: 'images/_help.png',
                               		tooltip: 'About...',
                               		cls:'x-btn-icon',
                               		handler: function() { openActionDialog(this, 'get_about'); }
@@ -217,7 +221,7 @@ function ext_init(){
                               	                          	    	{	// ADMIN
                           	    		xtype: "tbbutton",
                                  		id: 'tb_admin',
-                          	    		icon: 'http://localhost/extplorer/images/_admin.gif',
+                          	    		icon: 'images/_admin.gif',
                           	    		tooltip: 'Admin',
                           	    		cls:'x-btn-icon',
                           	    		handler: function() { openActionDialog(this, 'admin'); }
@@ -225,10 +229,10 @@ function ext_init(){
                           	    	                          	    	{	// LOGOUT
                           	    		xtype: "tbbutton",
                                  		id: 'tb_logout',
-                          	    		icon: 'http://localhost/extplorer/images/_logout.png',
+                          	    		icon: 'images/_logout.png',
                           	    		tooltip: 'Logout',
                           	    		cls:'x-btn-icon',
-                          	    		handler: function() { document.location.href='http://localhost/extplorer/index.php?option=com_extplorer&action=logout&order=name&direction=ASC'; }
+                          	    		handler: function() { document.location.href='index.php?option=com_extplorer&action=logout&order=name&direction=ASC'; }
                           	    	},		
                           	    	'-',
                           					
@@ -438,76 +442,76 @@ function ext_init(){
     
         items: [{
     		id: 'gc_edit',
-    		icon: 'http://localhost/extplorer/images/_edit.png',
+    		icon: 'images/_edit.png',
     		text: 'Edit',
     		handler: function() { openActionDialog(this, 'edit'); }
     	},
     	{
     		id: 'gc_diff',
-    		icon: 'http://localhost/extplorer/images/extension/document.png',
+    		icon: 'images/extension/document.png',
     		text: 'Diff',
     		handler: function() { openActionDialog(this, 'diff'); }
     	},
     	{
     		id: 'gc_rename',
-    		icon: 'http://localhost/extplorer/images/_fonts.png',
+    		icon: 'images/_fonts.png',
     		text: 'Rename',
     		handler: function() { ext_itemgrid.onCellDblClick( ext_itemgrid, gsm.clickedRow, 0 ); gsm.clickedRow = null; }
     	},
     	{
         	id: 'gc_copy',
-    		icon: 'http://localhost/extplorer/images/_editcopy.png',
+    		icon: 'images/_editcopy.png',
     		text: 'Copy',
     		handler: function() { openActionDialog(this, 'copy'); }
     	},
     	{
     		id: 'gc_move',
-    		icon: 'http://localhost/extplorer/images/_move.png',
+    		icon: 'images/_move.png',
     		text: 'Move',
     		handler: function() { openActionDialog(this, 'move'); }
     	},
     	{
     		id: 'gc_chmod',
-    		icon: 'http://localhost/extplorer/images/_chmod.png',
+    		icon: 'images/_chmod.png',
     		text: 'Change (chmod) Rights (Folder/File(s))',
     		handler: function() { openActionDialog(this, 'chmod'); }
     	},
     	{
     		id: 'gc_delete',
-    		icon: 'http://localhost/extplorer/images/_editdelete.png',
+    		icon: 'images/_editdelete.png',
     		text: 'Delete',
     		handler: function() { openActionDialog(this, 'delete'); }
     	},
     	'-',
     	{
     		id: 'gc_view',
-    		icon: 'http://localhost/extplorer/images/_view.png',
+    		icon: 'images/_view.png',
     		text: 'View',
     		handler: function() { openActionDialog(this, 'view'); }
     	},
     	{
     		id: 'gc_download',
-    		icon: 'http://localhost/extplorer/images/_down.png',
+    		icon: 'images/_down.png',
     		text: 'Download',
     		handler: function() { openActionDialog(this,'download'); }
     	},
     	'-',
     		    	{
     			id: 'gc_archive',
-	    		icon: 'http://localhost/extplorer/images/_archive.png',
+	    		icon: 'images/_archive.png',
 	    		text: 'Archive',
 	    		handler: function() { openActionDialog(this, 'archive'); }
 	    	},
 	    	{
 	    		id: 'gc_extract',
-	    		icon: 'http://localhost/extplorer/images/_extract.gif',
+	    		icon: 'images/_extract.gif',
 	    		text: 'Extract Archive',
 	    		handler: function() { openActionDialog(this, 'extract'); }
 	    	},
     	    	'-',
 		{
 			id: 'cancel',
-    		icon: 'http://localhost/extplorer/images/_cancel.png',
+    		icon: 'images/_cancel.png',
     		text: 'Cancel',
     		handler: function() { gridCtxMenu.hide(); }
     	}
@@ -557,56 +561,56 @@ function ext_init(){
         id:'dirCtxMenu',
         items: [    	{
         	id: 'dirCtxMenu_new',
-    		icon: 'http://localhost/extplorer/images/_folder_new.png',
+    		icon: 'images/_folder_new.png',
     		text: 'New File/Directory',
     		handler: function() {dirCtxMenu.hide();openActionDialog(this, 'mkitem');}
     	},
     	{
     		id: 'dirCtxMenu_rename',
-    		icon: 'http://localhost/extplorer/images/_fonts.png',
+    		icon: 'images/_fonts.png',
     		text: 'Rename',
     		handler: function() { dirCtxMenu.hide();openActionDialog(this, 'rename'); }
     	},
     	{
         	id: 'dirCtxMenu_copy',
-    		icon: 'http://localhost/extplorer/images/_editcopy.png',
+    		icon: 'images/_editcopy.png',
     		text: 'Copy',
     		handler: function() { dirCtxMenu.hide();openActionDialog(this, 'copy'); }
     	},
     	{
     		id: 'dirCtxMenu_move',
-    		icon: 'http://localhost/extplorer/images/_move.png',
+    		icon: 'images/_move.png',
     		text: 'Move',
     		handler: function() { dirCtxMenu.hide();openActionDialog(this, 'move'); }
     	},
     	{
     		id: 'dirCtxMenu_chmod',
-    		icon: 'http://localhost/extplorer/images/_chmod.png',
+    		icon: 'images/_chmod.png',
     		text: 'Change (chmod) Rights (Folder/File(s))',
     		handler: function() { dirCtxMenu.hide();openActionDialog(this, 'chmod'); }
     	},
     	{
     		id: 'dirCtxMenu_remove',
-    		icon: 'http://localhost/extplorer/images/_editdelete.png',
+    		icon: 'images/_editdelete.png',
     		text: 'Remove',
     		handler: function() { dirCtxMenu.hide();var num = 1; Ext.Msg.confirm('Confirm', String.format("Are you sure you want to delete these {0} item(s)?", num ), function(btn) { deleteDir( btn, dirCtxMenu.node ) }); }
     	},'-',
     		    	{
     			id: 'dirCtxMenu_archive',
-	    		icon: 'http://localhost/extplorer/images/_archive.png',
+	    		icon: 'images/_archive.png',
 	    		text: 'Archive',
 	    		handler: function() { openActionDialog(this, 'archive'); }
 	    	},
     	    	{
     		id: 'dirCtxMenu_reload',
-    		icon: 'http://localhost/extplorer/images/_reload.png',
+    		icon: 'images/_reload.png',
     		text: 'Reload',
     		handler: function() { dirCtxMenu.hide();dirCtxMenu.node.reload(); }
     	},
     	'-', 
 		{
 			id: 'dirCtxMenu_cancel',
-    		icon: 'http://localhost/extplorer/images/_cancel.png',
+    		icon: 'images/_cancel.png',
     		text: 'Cancel',
     		handler: function() { dirCtxMenu.hide(); }
     	}
@@ -616,19 +620,19 @@ function ext_init(){
         id:'copyCtx',
         items: [    	{
         	id: 'copymoveCtxMenu_copy',
-    		icon: 'http://localhost/extplorer/images/_editcopy.png',
+    		icon: 'images/_editcopy.png',
     		text: 'Copy',
     		handler: function() {copymoveCtxMenu.hide();copymove('copy');}
     	},
     	{
     		id: 'copymoveCtxMenu_move',
-    		icon: 'http://localhost/extplorer/images/_move.png',
+    		icon: 'images/_move.png',
     		text: 'Move',
     		handler: function() { copymoveCtxMenu.hide();copymove('move'); }
     	},'-', 
 		{
 			id: 'copymoveCtxMenu_cancel',
-    		icon: 'http://localhost/extplorer/images/_cancel.png',
+    		icon: 'images/_cancel.png',
     		text: 'Cancel',
     		handler: function() { copymoveCtxMenu.hide(); }
     	}
@@ -664,7 +668,7 @@ function ext_init(){
             xtype: "treepanel",
             region: "west",
         	id: "dirTree",
-        	title: 'Directory Tree <img src="http://localhost/extplorer/images/_reload.png" hspace="20" style="cursor:pointer;" title="reload" onclick="Ext.getCmp(\'dirTree\').getRootNode().reload();" alt="Reload" align="middle" />', 
+        	title: 'Directory Tree <img src="images/_reload.png" hspace="20" style="cursor:pointer;" title="reload" onclick="Ext.getCmp(\'dirTree\').getRootNode().reload();" alt="Reload" align="middle" />', 
         	closable: false,
             width: 230,
             titlebar: true,
@@ -854,7 +858,9 @@ function ext_init(){
 	}));
 		
         
-}
+}// END OF ext_init
+    }
+}();
 if( typeof Ext == 'undefined' ) {
 	document.location = 'index.php?option=com_extplorer&nofetchscript=1';
 }
@@ -866,7 +872,9 @@ function startExtplorer() {
 		Ext.EventManager.addListener(window, "load", ext_init );
 	} else {
 		// Other Browsers eat onReady
-		Ext.onReady( ext_init );
+		Ext.onReady( ag.exp.App.ext_init,ag.exp.App );
 	}
 }
 startExtplorer();
+
+
