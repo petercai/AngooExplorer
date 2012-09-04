@@ -3,9 +3,33 @@ Ext.ns('ag.exp','ag.exp.App');
 ag.exp.App = function(){
     return {
 
+    copymoveCtxMenu : new Ext.menu.Menu({
+        id:'copyCtx',
+        items: [        {
+            id: 'copymoveCtxMenu_copy',
+            icon: 'images/_editcopy.png',
+            text: 'Copy',
+            handler: function() {copymoveCtxMenu.hide();this.copymove('copy');}
+        },
+        {
+            id: 'copymoveCtxMenu_move',
+            icon: 'images/_move.png',
+            text: 'Move',
+            handler: function() { copymoveCtxMenu.hide();this.copymove('move'); }
+        },'-', 
+        {
+            id: 'copymoveCtxMenu_cancel',
+            icon: 'images/_cancel.png',
+            text: 'Cancel',
+            handler: function() { copymoveCtxMenu.hide(); }
+        }
+    ]
+    }),
+
+
     copymoveCtx:function (e){
         //ctxMenu.items.get('remove')[node.attributes.allowDelete ? 'enable' : 'disable']();
-        copymoveCtxMenu.showAt(e.rawEvent.getXY());
+        this.copymoveCtxMenu.showAt(e.rawEvent.getXY());
     },
 
 
@@ -626,28 +650,6 @@ ag.exp.App = function(){
     		icon: 'images/_cancel.png',
     		text: 'Cancel',
     		handler: function() { dirCtxMenu.hide(); }
-    	}
-	]
-    });
-    var copymoveCtxMenu = new Ext.menu.Menu({
-        id:'copyCtx',
-        items: [    	{
-        	id: 'copymoveCtxMenu_copy',
-    		icon: 'images/_editcopy.png',
-    		text: 'Copy',
-    		handler: function() {copymoveCtxMenu.hide();this.copymove('copy');}
-    	},
-    	{
-    		id: 'copymoveCtxMenu_move',
-    		icon: 'images/_move.png',
-    		text: 'Move',
-    		handler: function() { copymoveCtxMenu.hide();this.copymove('move'); }
-    	},'-', 
-		{
-			id: 'copymoveCtxMenu_cancel',
-    		icon: 'images/_cancel.png',
-    		text: 'Cancel',
-    		handler: function() { copymoveCtxMenu.hide(); }
     	}
 	]
     });
