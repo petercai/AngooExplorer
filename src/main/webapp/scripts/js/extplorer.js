@@ -2,8 +2,143 @@ Ext.ns('ag.exp','ag.exp.App');
 
 ag.exp.App = function(){
     return {
-        ext_init: function()
-/*function ext_init()*/{
+
+    copymoveCtx:function (e){
+        //ctxMenu.items.get('remove')[node.attributes.allowDelete ? 'enable' : 'disable']();
+        copymoveCtxMenu.showAt(e.rawEvent.getXY());
+    },
+
+
+    dirContext: function (node, e ) {
+        // Select the node that was right clicked
+        node.select();
+        // Unselect all files in the grid
+        ext_itemgrid.getSelectionModel().clearSelections();
+        
+        dirCtxMenu.items.get('dirCtxMenu_rename')[node.attributes.is_deletable ? 'enable' : 'disable']();
+        dirCtxMenu.items.get('dirCtxMenu_remove')[node.attributes.is_deletable ? 'enable' : 'disable']();
+        dirCtxMenu.items.get('dirCtxMenu_chmod')[node.attributes.is_chmodable ? 'enable' : 'disable']();
+        
+        dirCtxMenu.node = node;
+        dirCtxMenu.show(e.getTarget(), 't-b?' );
+        
+    },
+    
+    copymove:function( action ) {
+        var s = dropEvent.data.selections, r = [];
+        if( s ) {
+            // Dragged from the Grid
+            requestParams = getRequestParams();
+            requestParams.new_dir = dropEvent.target.id.replace( /_RRR_/g, '/' );
+            requestParams.new_dir = requestParams.new_dir.replace( /ext_root/g, '' );
+            requestParams.confirm = 'true';
+            requestParams.action = action;
+            handleCallback(requestParams);
+        } else {
+            // Dragged from inside the tree
+            //alert('Move ' + dropEvent.data.node.id.replace( /_RRR_/g, '/' )+' to '+ dropEvent.target.id.replace( /_RRR_/g, '/' ));
+            requestParams = getRequestParams();
+            requestParams.dir = datastore.directory.substring( 0, datastore.directory.lastIndexOf('/'));
+            requestParams.new_dir = dropEvent.target.id.replace( /_RRR_/g, '/' );
+            requestParams.new_dir = requestParams.new_dir.replace( /ext_root/g, '' );
+            requestParams.selitems = Array( dropEvent.data.node.id.replace( /_RRR_/g, '/' ) );
+            requestParams.confirm = 'true';
+            requestParams.action = action;
+            handleCallback(requestParams);
+        }
+    },
+
+    // trigger the data store load
+    loadDir:function() {
+        datastore.load({params:{start:0, limit:150, dir: datastore.directory, option:'com_extplorer', action:'getdircontents', sendWhat: datastore.sendWhat }});
+    },
+   
+    
+    rowContextMenu:function(grid, rowIndex, e, f) {
+        if( typeof e == 'object') {
+            e.preventDefault();
+        } else {
+            e = f;
+        }
+        gsm = ext_itemgrid.getSelectionModel();
+        gsm.clickedRow = rowIndex;
+        var selections = gsm.getSelections();
+        if( selections.length > 1 ) {
+            gridCtxMenu.items.get('gc_edit').disable();
+            gridCtxMenu.items.get('gc_delete').enable();
+            gridCtxMenu.items.get('gc_rename').disable();
+            gridCtxMenu.items.get('gc_chmod').enable();
+            gridCtxMenu.items.get('gc_download').disable();
+            gridCtxMenu.items.get('gc_extract').disable();
+            gridCtxMenu.items.get('gc_archive').enable();
+            gridCtxMenu.items.get('gc_view').enable();
+        } else if(selections.length == 1) {
+            gridCtxMenu.items.get('gc_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
+            gridCtxMenu.items.get('gc_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+            gridCtxMenu.items.get('gc_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+            gridCtxMenu.items.get('gc_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
+            gridCtxMenu.items.get('gc_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
+            gridCtxMenu.items.get('gc_extract')[selections[0].get('is_archive') ? 'enable' : 'disable']();
+            gridCtxMenu.items.get('gc_archive').enable();
+            gridCtxMenu.items.get('gc_view').enable();
+        }
+        gridCtxMenu.show(e.getTarget(), 'tr-br?' );
+
+    },
+        
+    handleRowClick:function (sm, rowIndex) {
+        var selections = sm.getSelections();
+        tb = ext_itemgrid.getTopToolbar();
+        if( selections.length > 1 ) {
+            tb.items.get('tb_edit').disable();
+            tb.items.get('tb_delete').enable();
+            tb.items.get('tb_rename').disable();
+            tb.items.get('tb_chmod').enable();
+            tb.items.get('tb_download').disable();
+            tb.items.get('tb_extract').disable();
+            tb.items.get('tb_archive').enable();
+            tb.items.get('tb_view').enable();
+        } else if(selections.length == 1) {
+            tb.items.get('tb_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
+            tb.items.get('tb_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+            tb.items.get('tb_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+            tb.items.get('tb_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
+            tb.items.get('tb_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
+            tb.items.get('tb_extract')[selections[0].get('is_archive') ? 'enable' : 'disable']();
+            tb.items.get('tb_archive').enable();
+            tb.items.get('tb_view').enable();
+        } else {
+            tb.items.get('tb_edit').disable();
+            tb.items.get('tb_delete').disable();
+            tb.items.get('tb_rename').disable();
+            tb.items.get('tb_chmod').disable();
+            tb.items.get('tb_download').disable();
+            tb.items.get('tb_extract').disable();
+            tb.items.get('tb_view').disable();
+            tb.items.get('tb_archive').disable();
+        }
+        return true;
+    },        
+        
+            // pluggable renders
+    renderFileName: function(value,p, record){
+        var t = new Ext.Template("<img src=\"{0}\" alt=\"* \" align=\"absmiddle\" />&nbsp;<b>{1}</b>");
+        return t.apply([record.get('icon'), value] );
+    },
+    renderType: function(value){
+        var t = new Ext.Template("<i>{0}</i>");
+        return t.apply([value]);
+    },
+    filterDataStore: function(btn,e) { 
+        var filterVal = Ext.getCmp("filterField").getValue();
+        if( filterVal.length > 1 ) {
+            datastore.filter( 'name', eval('/'+filterVal+'/gi') );
+        } else {
+            datastore.clearFilter();
+        }
+    },
+
+        init: function(){
 	Ext.BLANK_IMAGE_URL = "scripts/extjs34/resources/images/default/s.gif";
     // create the Data Store
     datastore = new Ext.data.Store({
@@ -50,15 +185,6 @@ ag.exp.App = function(){
     								}
     							 );
 
-    // pluggable renders
-    function renderFileName(value,p, record){
-        var t = new Ext.Template("<img src=\"{0}\" alt=\"* \" align=\"absmiddle\" />&nbsp;<b>{1}</b>");
-        return t.apply([record.get('icon'), value] );
-    }
-    function renderType(value){
-        var t = new Ext.Template("<i>{0}</i>");
-        return t.apply([value]);
-    }
     var gridtb = new Ext.Toolbar([
                          	{
                              	xtype: "tbbutton",
@@ -76,7 +202,7 @@ ag.exp.App = function(){
                               	text: 'Reload',
                             	tooltip: 'Reload',
                               	cls:'x-btn-text-icon',
-                              	handler: loadDir
+                              	handler: this.loadDir
                             },
                                                           	{
                               		xtype: "tbbutton",
@@ -243,10 +369,10 @@ ag.exp.App = function(){
                             		handler: function(btn,e) { 
                             					if( btn.pressed ) {
                             						datastore.sendWhat= 'both';
-                            						loadDir();
+                            						this.loadDir();
                             					} else {
                             						datastore.sendWhat= 'files';
-                            						loadDir();
+                            						this.loadDir();
                             					}
                             			}
                             	}), '-',
@@ -273,14 +399,6 @@ ag.exp.App = function(){
                             	})
 
                             ]);
-    function filterDataStore(btn,e) { 
-		var filterVal = Ext.getCmp("filterField").getValue();
-		if( filterVal.length > 1 ) {
-			datastore.filter( 'name', eval('/'+filterVal+'/gi') );
-		} else {
-			datastore.clearFilter();
-		}
-	}
     // add a paging toolbar to the grid's footer
     var gridbb = new Ext.PagingToolbar({
         store: datastore,
@@ -312,7 +430,7 @@ ag.exp.App = function(){
            dataIndex: 'name',
            width: 250,
 		   sortable: true,
-           renderer: renderFileName,
+           renderer: this.renderFileName,
            editor: new Ext.form.TextField({
 					allowBlank: false
 				}),
@@ -328,7 +446,7 @@ ag.exp.App = function(){
            width: 70,
 		   sortable: true,
            align: 'right',
-           renderer: renderType
+           renderer: this.renderType
         },{
            header: "Modified",
            dataIndex: 'modified',
@@ -362,81 +480,13 @@ ag.exp.App = function(){
     // Unregister the default double click action (which makes the name field editable - we want this when the user clicks "Rename" in the menu)
     //ext_itemgrid.un('celldblclick', ext_itemgrid.onCellDblClick);
     
-    function handleRowClick(sm, rowIndex) {
-    	var selections = sm.getSelections();
-    	tb = ext_itemgrid.getTopToolbar();
-    	if( selections.length > 1 ) {
-    		tb.items.get('tb_edit').disable();
-    		tb.items.get('tb_delete').enable();
-    		tb.items.get('tb_rename').disable();
-    		tb.items.get('tb_chmod').enable();
-    		tb.items.get('tb_download').disable();
-    		tb.items.get('tb_extract').disable();
-    		tb.items.get('tb_archive').enable();
-    		tb.items.get('tb_view').enable();
-    	} else if(selections.length == 1) {
-    		tb.items.get('tb_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
-    		tb.items.get('tb_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
-    		tb.items.get('tb_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
-    		tb.items.get('tb_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
-    		tb.items.get('tb_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
-    		tb.items.get('tb_extract')[selections[0].get('is_archive') ? 'enable' : 'disable']();
-    		tb.items.get('tb_archive').enable();
-    		tb.items.get('tb_view').enable();
-    	} else {
-			tb.items.get('tb_edit').disable();
-    		tb.items.get('tb_delete').disable();
-    		tb.items.get('tb_rename').disable();
-    		tb.items.get('tb_chmod').disable();
-    		tb.items.get('tb_download').disable();
-    		tb.items.get('tb_extract').disable();
-    		tb.items.get('tb_view').disable();
-    		tb.items.get('tb_archive').disable();
-    	}
-    	return true;
-    }
+
     
     // The Quicktips are used for the toolbar and Tree mouseover tooltips!
 	Ext.QuickTips.init();
 	
     
-    // trigger the data store load
-    function loadDir() {
-    	datastore.load({params:{start:0, limit:150, dir: datastore.directory, option:'com_extplorer', action:'getdircontents', sendWhat: datastore.sendWhat }});
-    }
-   
-    
-    function rowContextMenu(grid, rowIndex, e, f) {
-    	if( typeof e == 'object') {
-    		e.preventDefault();
-    	} else {
-    		e = f;
-    	}
-    	gsm = ext_itemgrid.getSelectionModel();
-    	gsm.clickedRow = rowIndex;
-    	var selections = gsm.getSelections();
-    	if( selections.length > 1 ) {
-    		gridCtxMenu.items.get('gc_edit').disable();
-    		gridCtxMenu.items.get('gc_delete').enable();
-    		gridCtxMenu.items.get('gc_rename').disable();
-    		gridCtxMenu.items.get('gc_chmod').enable();
-    		gridCtxMenu.items.get('gc_download').disable();
-    		gridCtxMenu.items.get('gc_extract').disable();
-    		gridCtxMenu.items.get('gc_archive').enable();
-    		gridCtxMenu.items.get('gc_view').enable();
-    	} else if(selections.length == 1) {
-    		gridCtxMenu.items.get('gc_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
-    		gridCtxMenu.items.get('gc_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
-    		gridCtxMenu.items.get('gc_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
-    		gridCtxMenu.items.get('gc_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
-    		gridCtxMenu.items.get('gc_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
-    		gridCtxMenu.items.get('gc_extract')[selections[0].get('is_archive') ? 'enable' : 'disable']();
-    		gridCtxMenu.items.get('gc_archive').enable();
-    		gridCtxMenu.items.get('gc_view').enable();
-    	}
-		gridCtxMenu.show(e.getTarget(), 'tr-br?' );
 
-    }
     gridCtxMenu = new Ext.menu.Menu({
     	id:'gridCtxMenu',
     
@@ -518,44 +568,7 @@ ag.exp.App = function(){
     	]
     });
     	
-	function dirContext(node, e ) {
-		// Select the node that was right clicked
-		node.select();
-		// Unselect all files in the grid
-		ext_itemgrid.getSelectionModel().clearSelections();
-		
-		dirCtxMenu.items.get('dirCtxMenu_rename')[node.attributes.is_deletable ? 'enable' : 'disable']();
-		dirCtxMenu.items.get('dirCtxMenu_remove')[node.attributes.is_deletable ? 'enable' : 'disable']();
-		dirCtxMenu.items.get('dirCtxMenu_chmod')[node.attributes.is_chmodable ? 'enable' : 'disable']();
-		
-		dirCtxMenu.node = node;
-		dirCtxMenu.show(e.getTarget(), 't-b?' );
-		
-	}
-	
-    function copymove( action ) {
-	    var s = dropEvent.data.selections, r = [];
-		if( s ) {
-			// Dragged from the Grid
-			requestParams = getRequestParams();
-			requestParams.new_dir = dropEvent.target.id.replace( /_RRR_/g, '/' );
-			requestParams.new_dir = requestParams.new_dir.replace( /ext_root/g, '' );
-			requestParams.confirm = 'true';
-			requestParams.action = action;
-			handleCallback(requestParams);
-		} else {
-			// Dragged from inside the tree
-			//alert('Move ' + dropEvent.data.node.id.replace( /_RRR_/g, '/' )+' to '+ dropEvent.target.id.replace( /_RRR_/g, '/' ));
-			requestParams = getRequestParams();
-			requestParams.dir = datastore.directory.substring( 0, datastore.directory.lastIndexOf('/'));
-			requestParams.new_dir = dropEvent.target.id.replace( /_RRR_/g, '/' );
-			requestParams.new_dir = requestParams.new_dir.replace( /ext_root/g, '' );
-			requestParams.selitems = Array( dropEvent.data.node.id.replace( /_RRR_/g, '/' ) );
-			requestParams.confirm = 'true';
-			requestParams.action = action;
-			handleCallback(requestParams);
-		}
-	}
+
     // context menus
     var dirCtxMenu = new Ext.menu.Menu({
         id:'dirCtxMenu',
@@ -622,13 +635,13 @@ ag.exp.App = function(){
         	id: 'copymoveCtxMenu_copy',
     		icon: 'images/_editcopy.png',
     		text: 'Copy',
-    		handler: function() {copymoveCtxMenu.hide();copymove('copy');}
+    		handler: function() {copymoveCtxMenu.hide();this.copymove('copy');}
     	},
     	{
     		id: 'copymoveCtxMenu_move',
     		icon: 'images/_move.png',
     		text: 'Move',
-    		handler: function() { copymoveCtxMenu.hide();copymove('move'); }
+    		handler: function() { copymoveCtxMenu.hide();this.copymove('move'); }
     	},'-', 
 		{
 			id: 'copymoveCtxMenu_cancel',
@@ -639,10 +652,6 @@ ag.exp.App = function(){
 	]
     });
 
-    function copymoveCtx(e){
-        //ctxMenu.items.get('remove')[node.attributes.allowDelete ? 'enable' : 'disable']();
-        copymoveCtxMenu.showAt(e.rawEvent.getXY());
-    }
     
 	// Hide the Admin Menu under Joomla! 1.5
 	try{ 
@@ -685,7 +694,7 @@ ag.exp.App = function(){
     	    ddGroup : 'TreeDD',
         	listeners: {
             	//"load": { fn: function(node) { chDir( node.id.replace( /_RRR_/g, '/' ), true ); } }, 
-        		'contextmenu': { fn: dirContext },
+        		'contextmenu': { fn: this.dirContext },
     			'textchange': { fn: function(node, text, oldText) {
     						if( text == oldText ) return true;
     						var requestParams = getRequestParams();
@@ -704,7 +713,7 @@ ag.exp.App = function(){
         		},
         		'beforenodedrop': { fn: function(e){
     						    	    	dropEvent = e;
-    						    	    	copymoveCtx(e);
+    						    	    	this.copymoveCtx(e);
     						    	    }
         		},
         		'beforemove': { fn: function() { return false; } }
@@ -715,7 +724,7 @@ ag.exp.App = function(){
                 expanded: true,
                 id:'ext_root',
                 listeners: {
-            		'contextmenu': { fn: dirContext },
+            		'contextmenu': { fn: this.dirContext },
             		'load': { fn: expandTreeToDir }
             	}
             })
@@ -750,8 +759,8 @@ ag.exp.App = function(){
 		            enableDragDrop: true,
 		            selModel: new Ext.grid.RowSelectionModel({
 		                		listeners: {
-		        					'rowselect': { fn: handleRowClick },
-		                			'selectionchange': { fn: handleRowClick }
+		        					'rowselect': { fn: this.handleRowClick },
+		                			'selectionchange': { fn: this.handleRowClick }
 		            			}
 		            		  }),
 		            loadMask: true,
@@ -781,12 +790,12 @@ ag.exp.App = function(){
 		            	handler: function() { openActionDialog(this, 'delete'); }
 		            }
 		            ],
-		        	listeners: { 'rowcontextmenu': { fn: rowContextMenu },
+		        	listeners: { 'rowcontextmenu': { fn: this.rowContextMenu },
 		        			'celldblclick': { fn: function( grid, rowIndex, columnIndex, e ) { 
 	        										if( Ext.isOpera ) { 
 	            										// because Opera <= 9 doesn't support the right-mouse-button-clicked event (contextmenu)
 	            										// we need to simulate it using the ondblclick event
-														rowContextMenu( grid, rowIndex, e );
+														this.rowContextMenu( grid, rowIndex, e );
 													} else {
 												    	gsm = ext_itemgrid.getSelectionModel();
 												    	gsm.clickedRow = rowIndex;
@@ -858,7 +867,7 @@ ag.exp.App = function(){
 	}));
 		
         
-}// END OF ext_init
+}// END OF init
     }
 }();
 if( typeof Ext == 'undefined' ) {
@@ -869,10 +878,10 @@ function startExtplorer() {
 	if(Ext.isIE){
 		// As this file is included inline (because otherwise it would throw Element not found JS errors in IE)
 		// we need to run the init function onLoad, not onDocumentReady in IE
-		Ext.EventManager.addListener(window, "load", ext_init );
+		Ext.EventManager.addListener(window, "load", ag.exp.App.init );
 	} else {
 		// Other Browsers eat onReady
-		Ext.onReady( ag.exp.App.ext_init,ag.exp.App );
+		Ext.onReady( ag.exp.App.init,ag.exp.App );
 	}
 }
 startExtplorer();
