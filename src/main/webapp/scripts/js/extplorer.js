@@ -1,7 +1,75 @@
 Ext.ns('ag.exp','ag.exp.App');
 
 ag.exp.App = function(){
+    // create the Data Store
+    datastore = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({
+            url: "index.php",
+            directory: "/",
+            params:{start:0, limit:150, dir: this.directory, option:"com_extplorer", action:"getdircontents" }
+        }),
+        directory: "/",
+        sendWhat: "both",
+        // create reader that reads the File records
+        reader: new Ext.data.JsonReader({
+            root: "items",
+            totalProperty: "totalCount"
+        }, Ext.data.Record.create([
+            {name: "name"},
+            {name: "size"},
+            {name: "type"},
+            {name: "modified"},
+            {name: "perms"},
+            {name: "icon"},
+            {name: "owner"},
+            {name: "is_deletable"},
+            {name: "is_file"},
+            {name: "is_archive"},
+            {name: "is_writable"},
+            {name: "is_chmodable"},
+            {name: "is_readable"},
+            {name: "is_deletable"},
+            {name: "is_editable"}
+        ])),
+
+        // turn on remote sorting
+        remoteSort: true
+    });
+    datastore.paramNames["dir"] = "direction";
+    datastore.paramNames["sort"] = "order";
+    
+    datastore.on("beforeload", function(ds, options) {
+                                    options.params.dir = options.params.dir ? options.params.dir : ds.directory;
+                                    options.params.option = "com_extplorer";
+                                    options.params.action = "getdircontents";
+                                    options.params.sendWhat = datastore.sendWhat;                                   
+                                    }
+                                 );
+
     return {
+
+    // add a paging toolbar to the grid's footer
+    gridbb : new Ext.PagingToolbar({
+        store: datastore,
+        pageSize: 150,
+        displayInfo: true,
+        displayMsg: 'Displaying Items {0} - {1} of {2}',
+        emptyMsg: 'No items to display',
+        beforePageText: 'Page',
+        afterPageText: 'of {0}',
+        firstText: 'First Page',
+        lastText: 'Last Page',
+        nextText: 'Next Page',
+        prevText: 'Previous Page',
+        refreshText: 'Reload',
+        items: ['-',' ',' ',' ',' ',' ',
+            new Ext.ux.StatusBar({
+                defaultText: 'Done.',
+                id: 'statusPanel'
+            })]
+    }),
+    
+
 
     copymoveCtxMenu : new Ext.menu.Menu({
         id:'copyCtx',
@@ -164,50 +232,7 @@ ag.exp.App = function(){
 
         init: function(){
 	Ext.BLANK_IMAGE_URL = "scripts/extjs34/resources/images/default/s.gif";
-    // create the Data Store
-    datastore = new Ext.data.Store({
-        proxy: new Ext.data.HttpProxy({
-            url: "index.php",
-            directory: "/",
-            params:{start:0, limit:150, dir: this.directory, option:"com_extplorer", action:"getdircontents" }
-        }),
-		directory: "/",
-		sendWhat: "both",
-        // create reader that reads the File records
-        reader: new Ext.data.JsonReader({
-            root: "items",
-            totalProperty: "totalCount"
-        }, Ext.data.Record.create([
-            {name: "name"},
-            {name: "size"},
-            {name: "type"},
-            {name: "modified"},
-            {name: "perms"},
-            {name: "icon"},
-            {name: "owner"},
-            {name: "is_deletable"},
-            {name: "is_file"},
-            {name: "is_archive"},
-            {name: "is_writable"},
-            {name: "is_chmodable"},
-            {name: "is_readable"},
-            {name: "is_deletable"},
-            {name: "is_editable"}
-        ])),
 
-        // turn on remote sorting
-        remoteSort: true
-    });
-    datastore.paramNames["dir"] = "direction";
-    datastore.paramNames["sort"] = "order";
-    
-    datastore.on("beforeload", function(ds, options) {
-    								options.params.dir = options.params.dir ? options.params.dir : ds.directory;
-    								options.params.option = "com_extplorer";
-    								options.params.action = "getdircontents";
-    								options.params.sendWhat = datastore.sendWhat;    								
-    								}
-    							 );
 
     var gridtb = new Ext.Toolbar([
                          	{
@@ -423,26 +448,6 @@ ag.exp.App = function(){
                             	})
 
                             ]);
-    // add a paging toolbar to the grid's footer
-    var gridbb = new Ext.PagingToolbar({
-        store: datastore,
-        pageSize: 150,
-        displayInfo: true,
-        displayMsg: 'Displaying Items {0} - {1} of {2}',
-        emptyMsg: 'No items to display',
-        beforePageText: 'Page',
-		afterPageText: 'of {0}',
-		firstText: 'First Page',
-		lastText: 'Last Page',
-		nextText: 'Next Page',
-		prevText: 'Previous Page',
-		refreshText: 'Reload',
-		items: ['-',' ',' ',' ',' ',' ',
-			new Ext.ux.StatusBar({
-			    defaultText: 'Done.',
-			    id: 'statusPanel'
-			})]
-    });
     
     // the column model has information about grid columns
     // dataIndex maps the column to the specific data field in
@@ -756,7 +761,7 @@ ag.exp.App = function(){
 		            ds: datastore,
 		            cm: cm,
 		           	tbar: gridtb,
-		            bbar: gridbb,
+		            bbar: this.gridbb,
 		            ddGroup : 'TreeDD',
 		            enableDragDrop: true,
 		            selModel: new Ext.grid.RowSelectionModel({
