@@ -485,7 +485,86 @@ ag.exp.App = function(){
         datastore.load({params:{start:0, limit:150, dir: datastore.directory, option:'com_extplorer', action:'getdircontents', sendWhat: datastore.sendWhat }});
     },
    
+    gridCtxMenu : new Ext.menu.Menu({
+        id:'gridCtxMenu',
     
+        items: [{
+            id: 'gc_edit',
+            icon: 'images/_edit.png',
+            text: 'Edit',
+            handler: function() { openActionDialog(this, 'edit'); }
+        },
+        {
+            id: 'gc_diff',
+            icon: 'images/extension/document.png',
+            text: 'Diff',
+            handler: function() { openActionDialog(this, 'diff'); }
+        },
+        {
+            id: 'gc_rename',
+            icon: 'images/_fonts.png',
+            text: 'Rename',
+            handler: function() { ext_itemgrid.onCellDblClick( ext_itemgrid, gsm.clickedRow, 0 ); gsm.clickedRow = null; }
+        },
+        {
+            id: 'gc_copy',
+            icon: 'images/_editcopy.png',
+            text: 'Copy',
+            handler: function() { openActionDialog(this, 'copy'); }
+        },
+        {
+            id: 'gc_move',
+            icon: 'images/_move.png',
+            text: 'Move',
+            handler: function() { openActionDialog(this, 'move'); }
+        },
+        {
+            id: 'gc_chmod',
+            icon: 'images/_chmod.png',
+            text: 'Change (chmod) Rights (Folder/File(s))',
+            handler: function() { openActionDialog(this, 'chmod'); }
+        },
+        {
+            id: 'gc_delete',
+            icon: 'images/_editdelete.png',
+            text: 'Delete',
+            handler: function() { openActionDialog(this, 'delete'); }
+        },
+        '-',
+        {
+            id: 'gc_view',
+            icon: 'images/_view.png',
+            text: 'View',
+            handler: function() { openActionDialog(this, 'view'); }
+        },
+        {
+            id: 'gc_download',
+            icon: 'images/_down.png',
+            text: 'Download',
+            handler: function() { openActionDialog(this,'download'); }
+        },
+        '-',
+                    {
+                id: 'gc_archive',
+                icon: 'images/_archive.png',
+                text: 'Archive',
+                handler: function() { openActionDialog(this, 'archive'); }
+            },
+            {
+                id: 'gc_extract',
+                icon: 'images/_extract.gif',
+                text: 'Extract Archive',
+                handler: function() { openActionDialog(this, 'extract'); }
+            },
+                '-',
+        {
+            id: 'cancel',
+            icon: 'images/_cancel.png',
+            text: 'Cancel',
+            handler: function() { this.gridCtxMenu.hide(); }
+        }
+        ]
+    }),    
     rowContextMenu:function(grid, rowIndex, e, f) {
         if( typeof e == 'object') {
             e.preventDefault();
@@ -496,25 +575,25 @@ ag.exp.App = function(){
         gsm.clickedRow = rowIndex;
         var selections = gsm.getSelections();
         if( selections.length > 1 ) {
-            gridCtxMenu.items.get('gc_edit').disable();
-            gridCtxMenu.items.get('gc_delete').enable();
-            gridCtxMenu.items.get('gc_rename').disable();
-            gridCtxMenu.items.get('gc_chmod').enable();
-            gridCtxMenu.items.get('gc_download').disable();
-            gridCtxMenu.items.get('gc_extract').disable();
-            gridCtxMenu.items.get('gc_archive').enable();
-            gridCtxMenu.items.get('gc_view').enable();
+            this.gridCtxMenu.items.get('gc_edit').disable();
+            this.gridCtxMenu.items.get('gc_delete').enable();
+            this.gridCtxMenu.items.get('gc_rename').disable();
+            this.gridCtxMenu.items.get('gc_chmod').enable();
+            this.gridCtxMenu.items.get('gc_download').disable();
+            this.gridCtxMenu.items.get('gc_extract').disable();
+            this.gridCtxMenu.items.get('gc_archive').enable();
+            this.gridCtxMenu.items.get('gc_view').enable();
         } else if(selections.length == 1) {
-            gridCtxMenu.items.get('gc_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
-            gridCtxMenu.items.get('gc_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
-            gridCtxMenu.items.get('gc_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
-            gridCtxMenu.items.get('gc_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
-            gridCtxMenu.items.get('gc_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
-            gridCtxMenu.items.get('gc_extract')[selections[0].get('is_archive') ? 'enable' : 'disable']();
-            gridCtxMenu.items.get('gc_archive').enable();
-            gridCtxMenu.items.get('gc_view').enable();
+            this.gridCtxMenu.items.get('gc_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
+            this.gridCtxMenu.items.get('gc_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+            this.gridCtxMenu.items.get('gc_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+            this.gridCtxMenu.items.get('gc_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
+            this.gridCtxMenu.items.get('gc_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
+            this.gridCtxMenu.items.get('gc_extract')[selections[0].get('is_archive') ? 'enable' : 'disable']();
+            this.gridCtxMenu.items.get('gc_archive').enable();
+            this.gridCtxMenu.items.get('gc_view').enable();
                             						}
-        gridCtxMenu.show(e.getTarget(), 'tr-br?' );
+        this.gridCtxMenu.show(e.getTarget(), 'tr-br?' );
 
     },
         
@@ -585,86 +664,7 @@ ag.exp.App = function(){
 	
     
 
-    gridCtxMenu = new Ext.menu.Menu({
-    	id:'gridCtxMenu',
     
-        items: [{
-    		id: 'gc_edit',
-    		icon: 'images/_edit.png',
-    		text: 'Edit',
-    		handler: function() { openActionDialog(this, 'edit'); }
-    	},
-    	{
-    		id: 'gc_diff',
-    		icon: 'images/extension/document.png',
-    		text: 'Diff',
-    		handler: function() { openActionDialog(this, 'diff'); }
-    	},
-    	{
-    		id: 'gc_rename',
-    		icon: 'images/_fonts.png',
-    		text: 'Rename',
-    		handler: function() { ext_itemgrid.onCellDblClick( ext_itemgrid, gsm.clickedRow, 0 ); gsm.clickedRow = null; }
-    	},
-    	{
-        	id: 'gc_copy',
-    		icon: 'images/_editcopy.png',
-    		text: 'Copy',
-    		handler: function() { openActionDialog(this, 'copy'); }
-    	},
-    	{
-    		id: 'gc_move',
-    		icon: 'images/_move.png',
-    		text: 'Move',
-    		handler: function() { openActionDialog(this, 'move'); }
-    	},
-    	{
-    		id: 'gc_chmod',
-    		icon: 'images/_chmod.png',
-    		text: 'Change (chmod) Rights (Folder/File(s))',
-    		handler: function() { openActionDialog(this, 'chmod'); }
-    	},
-    	{
-    		id: 'gc_delete',
-    		icon: 'images/_editdelete.png',
-    		text: 'Delete',
-    		handler: function() { openActionDialog(this, 'delete'); }
-    	},
-    	'-',
-    	{
-    		id: 'gc_view',
-    		icon: 'images/_view.png',
-    		text: 'View',
-    		handler: function() { openActionDialog(this, 'view'); }
-    	},
-    	{
-    		id: 'gc_download',
-    		icon: 'images/_down.png',
-    		text: 'Download',
-    		handler: function() { openActionDialog(this,'download'); }
-    	},
-    	'-',
-    		    	{
-    			id: 'gc_archive',
-	    		icon: 'images/_archive.png',
-	    		text: 'Archive',
-	    		handler: function() { openActionDialog(this, 'archive'); }
-	    	},
-	    	{
-	    		id: 'gc_extract',
-	    		icon: 'images/_extract.gif',
-	    		text: 'Extract Archive',
-	    		handler: function() { openActionDialog(this, 'extract'); }
-	    	},
-    	    	'-',
-		{
-			id: 'cancel',
-    		icon: 'images/_cancel.png',
-    		text: 'Cancel',
-    		handler: function() { gridCtxMenu.hide(); }
-    	}
-    	]
-    });
     	
 
     
