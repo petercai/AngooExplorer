@@ -17,8 +17,8 @@
 <link type="text/css" href="scripts/extjs3-ext/ux.fileuploadfield/fileuploadfield.css" rel="stylesheet" />
 
 <!-- Application -->
-<script type="text/javascript" src="scripts/js/functions.js"></script>
 <script type="text/javascript" src="scripts/js/extplorer.js"></script>
+<script type="text/javascript" src="scripts/js/functions.js"></script>
 <script type="text/javascript" src="scripts/js/viewport.js"></script>
 
 
@@ -28,26 +28,24 @@
 ﻿<link rel="stylesheet" href="style/style.css" type="text/css" />
 </head>
 <body>
-<div id="ext_header">
-<table border="0" width="100%" cellspacing="0" cellpadding="5">
-<tr>
-<td width="20%">
-</td>
-<td style="color:black;" width="10%">
-	<a href="http://extplorer.net" target="_blank" title="eXtplorer Project">
-		<img src="images/eXtplorer_logo.png" alt="eXtplorer Logo" border="0" />
-	</a>
-</td>
-
-<td style="padding-left: 15px; color:black;" id="bookmark_container" width="35%"></td>
-<td width="25%" style="padding-left: 15px; color:black;">Current mode: 
-	<strong>extplorer 
-		<a href="index.php?option=com_extplorer&amp;action=logout" title="Logout">[Logout]</a>
-	</strong>. You could switch to 
-	<a onclick="openActionDialog('switch_file_mode', 'ftp_authentication');return false;" href="/extplorer/index.php?option=com_extplorer&nofetchscript=1&amp;file_mode=ftp">ftp</a> 
-	mode.
-	</td>
-</tr></table></div>		
+	<div id="ext_header">
+		<table border="0" width="100%" cellspacing="0" cellpadding="5">
+			<tr>
+				<td width="20%">
+					You could switch to 
+					<a onclick="openActionDialog('switch_file_mode', 'ftp_authentication');return false;" href="/extplorer/index.php?option=com_extplorer&nofetchscript=1&amp;file_mode=ftp">ftp</a> 
+					mode.
+				</td>
+				<td style="color:black;" width="10%"></td>
+				<td style="padding-left: 15px; color:black;" id="bookmark_container" width="35%"></td>
+				<td width="25%" style="padding-left: 15px; color:black;">Current mode: 
+					<strong>extplorer 
+						<a href="index.php?option=com_extplorer&amp;action=logout" title="Logout">[Logout]</a>
+					</strong>. 
+				</td>
+			</tr>
+		</table>
+	</div>		
 	<div id="dirtree-panel"></div>
 	<div id="locationbar-panel"></div>
 	<div id="item-grid"></div>

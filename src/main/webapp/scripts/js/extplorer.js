@@ -1,6 +1,33 @@
 Ext.ns('ag.exp','ag.exp.App');
 
 ag.exp.App = function(){
+       Ext.BLANK_IMAGE_URL = "scripts/extjs34/resources/images/default/s.gif";
+
+
+
+    // Unregister the default double click action (which makes the name field editable - we want this when the user clicks "Rename" in the menu)
+    //ext_itemgrid.un('celldblclick', ext_itemgrid.onCellDblClick);
+    
+
+    
+    // The Quicktips are used for the toolbar and Tree mouseover tooltips!
+    Ext.QuickTips.init();
+    
+    
+
+
+        
+
+    
+    // Hide the Admin Menu under Joomla! 1.5
+    try{ 
+            Ext.fly('header-box').hide();Ext.fly('border-top').hide();
+    } catch(e) {}
+    // Hide the Admin Menu under Joomla! 1.0
+    try{
+        Ext.fly('header').hide();Ext.select(".menubar").hide();
+    } catch(e) {}
+
     // create the Data Store
     datastore = new Ext.data.Store({
         proxy: new Ext.data.HttpProxy({
@@ -650,32 +677,6 @@ ag.exp.App = function(){
     },
 
         init: function(){
-	Ext.BLANK_IMAGE_URL = "scripts/extjs34/resources/images/default/s.gif";
-    
-
-
-    // Unregister the default double click action (which makes the name field editable - we want this when the user clicks "Rename" in the menu)
-    //ext_itemgrid.un('celldblclick', ext_itemgrid.onCellDblClick);
-    
-
-    
-    // The Quicktips are used for the toolbar and Tree mouseover tooltips!
-	Ext.QuickTips.init();
-	
-    
-
-    
-    	
-
-    
-	// Hide the Admin Menu under Joomla! 1.5
-	try{ 
-    		Ext.fly('header-box').hide();Ext.fly('border-top').hide();
-	} catch(e) {}
-	// Hide the Admin Menu under Joomla! 1.0
-	try{
-		Ext.fly('header').hide();Ext.select(".menubar").hide();
-	} catch(e) {}
 	
 	var me = this;
 	var viewport = new Ext.Viewport({
@@ -688,7 +689,9 @@ ag.exp.App = function(){
             initialSize: 50,
             titlebar: false,
             closable: false,
-            contentEl: "ext_header"
+            contentEl: "ext_header" /*
+                                     * show html content in ext_header tag
+                                     */
         },{
             xtype: "treepanel",
             region: "west",
@@ -806,7 +809,7 @@ ag.exp.App = function(){
 		            	handler: function() { openActionDialog(this, 'delete'); }
 		            }
 		            ],
-		        	listeners: { 'rowcontextmenu': { fn: this.rowContextMenu },
+		        	listeners: { 'rowcontextmenu': { fn: this.rowContextMenu, scope: me },
 		        			'celldblclick': { fn: function( grid, rowIndex, columnIndex, e ) { 
 	        										if( Ext.isOpera ) { 
 	            										// because Opera <= 9 doesn't support the right-mouse-button-clicked event (contextmenu)
