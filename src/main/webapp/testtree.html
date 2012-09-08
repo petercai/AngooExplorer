@@ -17,9 +17,8 @@
 <link type="text/css" href="scripts/extjs3-ext/ux.fileuploadfield/fileuploadfield.css" rel="stylesheet" />
 
 <!-- Application -->
-<script type="text/javascript" src="scripts/js/calendar-list.js"></script>
-<script type="text/javascript" src="scripts/js/event-list.js"></script>
-<script type="text/javascript" src="scripts/js/test-app.js"></script>
+<script type="text/javascript" src="scripts/js/testmain.js"></script>
+<script type="text/jjavascript" src="scripts/js/agtree.js"></script>
 <script type="text/javascript" src="scripts/js/functions.js"></script>
 
 
@@ -28,5 +27,27 @@
 <meta name="robots" content="noindex, nofollow" />
 ﻿<link rel="stylesheet" href="style/style.css" type="text/css" />
 </head>
-<body></body>
+<body>
+<div id="ext_header">
+<table border="0" width="100%" cellspacing="0" cellpadding="5">
+<tr>
+<td width="20%">
+					You could switch to 
+					<a onclick="openActionDialog('switch_file_mode', 'ftp_authentication');return false;" href="/extplorer/index.php?option=com_extplorer&nofetchscript=1&amp;file_mode=ftp">ftp</a> 
+					mode.
+</td>
+				<td style="color:black;" width="10%"></td>
+<td style="padding-left: 15px; color:black;" id="bookmark_container" width="35%"></td>
+<td width="25%" style="padding-left: 15px; color:black;">Current mode: 
+	<strong>extplorer 
+		<a href="index.php?option=com_extplorer&amp;action=logout" title="Logout">[Logout]</a>
+					</strong>. 
+	</td>
+			</tr>
+		</table>
+	</div>		
+	<div id="dirtree-panel"></div>
+	<div id="locationbar-panel"></div>
+	<div id="item-grid"></div>
+	</body>
 </html>
