@@ -1,6 +1,6 @@
-Ext.ns('ag.exp','ag.exp.App');
+Ext.ns('age.App');
 
-ag.exp.App = function(){
+age.App = function(){
     return {
             // pluggable renders
     renderFileName: function(value,p, record){
@@ -869,10 +869,10 @@ function startExtplorer() {
 	if(Ext.isIE){
 		// As this file is included inline (because otherwise it would throw Element not found JS errors in IE)
 		// we need to run the init function onLoad, not onDocumentReady in IE
-		Ext.EventManager.addListener(window, "load", ag.exp.App.init );
+		Ext.EventManager.addListener(window, "load", age.App.init );
 	} else {
 		// Other Browsers eat onReady
-		Ext.onReady( ag.exp.App.init,ag.exp.App );
+		Ext.onReady( age.App.init,age.App );
 	}
 }
 startExtplorer();
