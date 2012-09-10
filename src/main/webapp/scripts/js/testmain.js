@@ -1,4 +1,4 @@
-Ext.ns('age.TestApp');
+Ext.ns('age','age.TestApp');
 	
 age.TestApp = function(){
 	return {
@@ -17,9 +17,17 @@ age.TestApp = function(){
                     /*
                      * TODO: TREE PANEL
                      */
-                    xtype: 'panel',
-                    region: 'west',
+                    xtype: 'ageexttree',
+                    split: true,
+                    region: 'east',
                     width: 150,
+                    useArrows: true,
+                 },
+                {
+                    xtype: 'panel',
+                	width: 150,
+                	split: true,
+                    region: 'west',
                     html: 'West Panel'
                 },
                 {

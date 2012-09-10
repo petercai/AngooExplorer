@@ -7,14 +7,18 @@ age.TreePanel = Ext.extend(Ext.tree.Panel,{
             autoScroll:true,
     	    animate:true, 
     	    //rootVisible: false,
+    containerScroll: true,
+    enableDD:true,
+    ddGroup : 'TreeDD',
+	
+	initComponent: function(){
+		var me = this;
+		Ext.applyIf(me,{
     	    loader: new Ext.tree.TreeLoader({
     	    	preloadChildren: true,
     	        dataUrl:'index.php',
     	        baseParams: {option:'com_extplorer', action:'getdircontents', dir: '',sendWhat: 'dirs'} // custom http params
     	    }),
-    	    containerScroll: true,
-    	    enableDD:true,
-    	    ddGroup : 'TreeDD',
         	listeners: {
             	//"load": { fn: function(node) { chDir( node.id.replace( /_RRR_/g, '/' ), true ); } }, 
         		'contextmenu': { fn: dirContext },
@@ -50,14 +54,10 @@ age.TreePanel = Ext.extend(Ext.tree.Panel,{
             		'contextmenu': { fn: dirContext },
             		'load': { fn: expandTreeToDir }
             	}
-            }),
-	
-	initComponent: function(){
-		var me = this;
-		Ext.applyIf(me,{
-			
-		});
-	},
+		    })
+		}); // end of applyIf
+			age.TreePanel.superclass.initComponent.call(this);
+	}, // end of initComponent
 	endOfClass: function(){}
 });
 Ext.reg('agetree',age.TreePanel);
