@@ -17,11 +17,24 @@ age.TestApp = function(){
                     /*
                      * TODO: TREE PANEL
                      */
-                    xtype: 'ageexttree',
+                    xtype: 'agetree',
                     split: true,
                     region: 'east',
-                    width: 150,
+                    width: 150
+/*
                     useArrows: true,
+          autoScroll: true,
+          animate: true,
+          enableDD: true,
+          containerScroll: true,
+          border: false,
+          root: {
+              nodeType: 'async',
+              text: 'Ext JS',
+              draggable: false,
+              id: 'src'
+          }
+*/
                  },
                 {
                     xtype: 'panel',

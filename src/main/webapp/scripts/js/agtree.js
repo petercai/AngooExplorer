@@ -1,4 +1,4 @@
-age.TreePanel = Ext.extend(Ext.tree.Panel,{
+age.TreePanel = Ext.extend(Ext.tree.TreePanel,{
 	
 	        title: 'Directory Tree <img src="images/_reload.png" hspace="20" style="cursor:pointer;" title="reload" onclick="Ext.getCmp(\'dirTree\').getRootNode().reload();" alt="Reload" align="middle" />', 
         	closable: false,
