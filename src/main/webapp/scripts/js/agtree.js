@@ -14,44 +14,52 @@ age.TreePanel = Ext.extend(Ext.tree.TreePanel,{
 	initComponent: function(){
 		var me = this;
 		
+		Ext.applyIf(me,{
 		    // context menus
-    this.dirCtxMenu = new Ext.menu.Menu({
+        dirCtxMenu : new Ext.menu.Menu({
         id:'dirCtxMenu',
         items: [        {
             id: 'dirCtxMenu_new',
             icon: 'images/_folder_new.png',
             text: 'New File/Directory',
-            handler: function() {dirCtxMenu.hide();openActionDialog(this, 'mkitem');}
+                handler: function() {me.dirCtxMenu.hide();openActionDialog(this, 'mkitem');}
         },
         {
             id: 'dirCtxMenu_rename',
             icon: 'images/_fonts.png',
             text: 'Rename',
-            handler: function() { dirCtxMenu.hide();openActionDialog(this, 'rename'); }
+                handler: function() { me.dirCtxMenu.hide();openActionDialog(this, 'rename'); }
         },
         {
             id: 'dirCtxMenu_copy',
             icon: 'images/_editcopy.png',
             text: 'Copy',
-            handler: function() { dirCtxMenu.hide();openActionDialog(this, 'copy'); }
+                handler: function() { me.dirCtxMenu.hide();openActionDialog(this, 'copy'); }
         },
         {
             id: 'dirCtxMenu_move',
             icon: 'images/_move.png',
             text: 'Move',
-            handler: function() { dirCtxMenu.hide();openActionDialog(this, 'move'); }
+                handler: function() { me.dirCtxMenu.hide();openActionDialog(this, 'move'); }
     },
         {
             id: 'dirCtxMenu_chmod',
             icon: 'images/_chmod.png',
             text: 'Change (chmod) Rights (Folder/File(s))',
-            handler: function() { dirCtxMenu.hide();openActionDialog(this, 'chmod'); }
+                handler: function() { me.dirCtxMenu.hide();openActionDialog(this, 'chmod'); }
     },        
         {
             id: 'dirCtxMenu_remove',
             icon: 'images/_editdelete.png',
             text: 'Remove',
-            handler: function() { dirCtxMenu.hide();var num = 1; Ext.Msg.confirm('Confirm', String.format("Are you sure you want to delete these {0} item(s)?", num ), function(btn) { deleteDir( btn, dirCtxMenu.node ) }); }
+    
+                    handler: function() {
+                        me.dirCtxMenu.hide();
+                        var num = 1;
+                        Ext.Msg.confirm('Confirm', String.format("Are you sure you want to delete these {0} item(s)?", num), function(btn) {
+                            deleteDir(btn, me.dirCtxMenu.node)
+                        });
+                    }
         },'-',
                     {
                 id: 'dirCtxMenu_archive',
@@ -63,24 +71,23 @@ age.TreePanel = Ext.extend(Ext.tree.TreePanel,{
             id: 'dirCtxMenu_reload',
             icon: 'images/_reload.png',
             text: 'Reload',
-            handler: function() { dirCtxMenu.hide();dirCtxMenu.node.reload(); }
+                handler: function() { me.dirCtxMenu.hide();me.dirCtxMenu.node.reload(); }
     },
         '-', 
         {
             id: 'dirCtxMenu_cancel',
             icon: 'images/_cancel.png',
             text: 'Cancel',
-            handler: function() { dirCtxMenu.hide(); }
+                handler: function() { me.dirCtxMenu.hide(); }
         }
     ]
-    });
+        }),
 		
 		
-		Ext.applyIf(me,{
 		   dirContext:   function(node, e ) {
                 // Select the node that was right clicked
                 node.select();
-                // Unselect all files in the grid
+                // TODO: Unselect all files in the grid
                 // ext_itemgrid.getSelectionModel().clearSelections();
 
                 
@@ -101,7 +108,7 @@ age.TreePanel = Ext.extend(Ext.tree.TreePanel,{
     	    }),
         	listeners: {
             	//"load": { fn: function(node) { chDir( node.id.replace( /_RRR_/g, '/' ), true ); } }, 
-        		'contextmenu': { fn: this.dirContext },
+        		// 'contextmenu': { fn: this.dirContext, scope: this }, // cannot be here ?!!
     			'textchange': { fn: function(node, text, oldText) {
     						if( text == oldText ) return true;
     						var requestParams = getRequestParams();
@@ -136,8 +143,13 @@ age.TreePanel = Ext.extend(Ext.tree.TreePanel,{
             	}
 		    })
 		}); // end of applyIf
+		
 			age.TreePanel.superclass.initComponent.call(this);
+
+        this.on('contextmenu',this.dirContext, this);
 	}, // end of initComponent
+	
+	
 	endOfClass: function(){}
 });
 Ext.reg('agetree',age.TreePanel);
