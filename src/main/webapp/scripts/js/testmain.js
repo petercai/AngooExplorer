@@ -19,29 +19,15 @@ age.TestApp = function(){
                      */
                     xtype: 'agetree',
                     split: true,
-                    region: 'east',
+                    region: 'west',
                     width: 150
-/*
-                    useArrows: true,
-          autoScroll: true,
-          animate: true,
-          enableDD: true,
-          containerScroll: true,
-          border: false,
-          root: {
-              nodeType: 'async',
-              text: 'Ext JS',
-              draggable: false,
-              id: 'src'
-          }
-*/
                  },
                 {
                     xtype: 'panel',
                 	width: 150,
                 	split: true,
-                    region: 'west',
-                    html: 'West Panel'
+                    region: 'east',
+                    html: 'East Panel'
                 },
                 {
                     xtype: 'panel',
